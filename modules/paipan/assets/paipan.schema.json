@@ -1,0 +1,1787 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Qimen paipan snapshot 1.0.0",
+  "description": "Additive envelope over engine 0.4.1 output. Empty strings and false booleans retain their original values; palaceStates explains availability.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "engineVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "snapshotId": {
+      "type": "string",
+      "pattern": "^qimen_\\d{4}-\\d{2}-\\d{2}_\\d{4}_[a-z-]+_[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "input": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"
+    },
+    "profile": {
+      "enum": [
+        "shijia-zhuanpan-chaibu",
+        "shijia-zhuanpan-zhirun",
+        "shijia-feipan-chaibu",
+        "shijia-feipan-zhirun",
+        "shijia-xingfeimenzhuan-chaibu",
+        "shijia-xingfeimenzhuan-zhirun",
+        "shijia-shenzhuanfeipan-chaibu",
+        "shijia-shenzhuanfeipan-zhirun",
+        "rijia-zhuanpan",
+        "rijia-feipan",
+        "rijia-xingfeimenzhuan",
+        "rijia-shenzhuanfeipan",
+        "yuejia-zhuanpan",
+        "yuejia-feipan",
+        "yuejia-xingfeimenzhuan",
+        "yuejia-shenzhuanfeipan"
+      ]
+    },
+    "mode": {
+      "const": "calendar"
+    },
+    "settings": {
+      "$ref": "#/$defs/settings"
+    },
+    "inactiveSettings": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "centerHost",
+          "yangGods",
+          "intercalationDays",
+          "starDirection",
+          "doorOrder",
+          "middleDoor",
+          "taiChang"
+        ]
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "timeConventions": {
+      "type": "object",
+      "properties": {
+        "timezone": {
+          "const": "UTC+8"
+        },
+        "utcOffsetMinutes": {
+          "const": 480
+        },
+        "dayBoundary": {
+          "const": "23:00"
+        },
+        "yearBoundary": {
+          "const": "立春"
+        },
+        "monthBoundary": {
+          "const": "节"
+        },
+        "precision": {
+          "const": "分钟"
+        },
+        "calendarDataVersion": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "timezone",
+        "utcOffsetMinutes",
+        "dayBoundary",
+        "yearBoundary",
+        "monthBoundary",
+        "precision",
+        "calendarDataVersion"
+      ],
+      "additionalProperties": true
+    },
+    "generator": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "const": "qimen-paipan"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "markdownVersion": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "markdownVersion"
+      ],
+      "additionalProperties": true
+    },
+    "generatedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+    },
+    "yang": {
+      "type": "boolean"
+    },
+    "ju": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9
+    },
+    "hourIndex": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 59
+    },
+    "hour": {
+      "type": "string",
+      "pattern": "^[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]$"
+    },
+    "activeIndex": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 59
+    },
+    "activePillar": {
+      "enum": [
+        "hour",
+        "day",
+        "month"
+      ]
+    },
+    "activeGanZhi": {
+      "type": "string",
+      "pattern": "^[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]$"
+    },
+    "pillars": {
+      "type": "object",
+      "properties": {
+        "year": {
+          "type": "string",
+          "pattern": "^[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]$"
+        },
+        "month": {
+          "type": "string",
+          "pattern": "^[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]$"
+        },
+        "day": {
+          "type": "string",
+          "pattern": "^[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]$"
+        },
+        "hour": {
+          "type": "string",
+          "pattern": "^[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]$"
+        }
+      },
+      "required": [
+        "year",
+        "month",
+        "day",
+        "hour"
+      ],
+      "additionalProperties": true
+    },
+    "layers": {
+      "type": "object",
+      "properties": {
+        "stars": {
+          "type": "boolean"
+        },
+        "stems": {
+          "type": "boolean"
+        },
+        "doors": {
+          "type": "boolean"
+        },
+        "gods": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "stars",
+        "stems",
+        "doors",
+        "gods"
+      ],
+      "additionalProperties": true
+    },
+    "xun": {
+      "type": "string",
+      "pattern": "^[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]$"
+    },
+    "hidden": {
+      "enum": [
+        "甲",
+        "乙",
+        "丙",
+        "丁",
+        "戊",
+        "己",
+        "庚",
+        "辛",
+        "壬",
+        "癸"
+      ]
+    },
+    "original": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9
+    },
+    "source": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9
+    },
+    "hostPalace": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 9
+    },
+    "hostTerm": {
+      "enum": [
+        "冬至",
+        "小寒",
+        "大寒",
+        "立春",
+        "雨水",
+        "惊蛰",
+        "春分",
+        "清明",
+        "谷雨",
+        "立夏",
+        "小满",
+        "芒种",
+        "夏至",
+        "小暑",
+        "大暑",
+        "立秋",
+        "处暑",
+        "白露",
+        "秋分",
+        "寒露",
+        "霜降",
+        "立冬",
+        "小雪",
+        "大雪"
+      ]
+    },
+    "darkMode": {
+      "enum": [
+        "mingfa",
+        "unavailable"
+      ]
+    },
+    "targetRaw": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9
+    },
+    "target": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9
+    },
+    "targetStem": {
+      "enum": [
+        "",
+        "甲",
+        "乙",
+        "丙",
+        "丁",
+        "戊",
+        "己",
+        "庚",
+        "辛",
+        "壬",
+        "癸"
+      ]
+    },
+    "chiefStar": {
+      "enum": [
+        "",
+        "天蓬",
+        "天芮",
+        "天冲",
+        "天辅",
+        "天禽",
+        "天心",
+        "天柱",
+        "天任",
+        "天英"
+      ]
+    },
+    "chiefDoor": {
+      "enum": [
+        "",
+        "休门",
+        "死门",
+        "伤门",
+        "杜门",
+        "中门",
+        "开门",
+        "惊门",
+        "生门",
+        "景门"
+      ]
+    },
+    "doorRaw": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9
+    },
+    "doorTarget": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9
+    },
+    "earth": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "甲",
+          "乙",
+          "丙",
+          "丁",
+          "戊",
+          "己",
+          "庚",
+          "辛",
+          "壬",
+          "癸"
+        ]
+      },
+      "minItems": 9,
+      "maxItems": 9
+    },
+    "sky": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "",
+          "甲",
+          "乙",
+          "丙",
+          "丁",
+          "戊",
+          "己",
+          "庚",
+          "辛",
+          "壬",
+          "癸"
+        ]
+      },
+      "minItems": 9,
+      "maxItems": 9
+    },
+    "stars": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "",
+          "天蓬",
+          "天芮",
+          "天冲",
+          "天辅",
+          "天禽",
+          "天心",
+          "天柱",
+          "天任",
+          "天英"
+        ]
+      },
+      "minItems": 9,
+      "maxItems": 9
+    },
+    "doors": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "",
+          "休门",
+          "死门",
+          "伤门",
+          "杜门",
+          "中门",
+          "开门",
+          "惊门",
+          "生门",
+          "景门"
+        ]
+      },
+      "minItems": 9,
+      "maxItems": 9
+    },
+    "heavenGods": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "",
+          "值符",
+          "螣蛇",
+          "太阴",
+          "六合",
+          "白虎",
+          "玄武",
+          "九地",
+          "九天",
+          "勾陈",
+          "朱雀",
+          "太常"
+        ]
+      },
+      "minItems": 9,
+      "maxItems": 9
+    },
+    "earthGods": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "",
+          "值符",
+          "螣蛇",
+          "太阴",
+          "六合",
+          "白虎",
+          "玄武",
+          "九地",
+          "九天",
+          "勾陈",
+          "朱雀",
+          "太常"
+        ]
+      },
+      "minItems": 9,
+      "maxItems": 9
+    },
+    "dark": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "",
+          "甲",
+          "乙",
+          "丙",
+          "丁",
+          "戊",
+          "己",
+          "庚",
+          "辛",
+          "壬",
+          "癸"
+        ]
+      },
+      "minItems": 9,
+      "maxItems": 9
+    },
+    "darkBranches": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "",
+          "子",
+          "丑",
+          "寅",
+          "卯",
+          "辰",
+          "巳",
+          "午",
+          "未",
+          "申",
+          "酉",
+          "戌",
+          "亥"
+        ]
+      },
+      "minItems": 9,
+      "maxItems": 9
+    },
+    "birdPalace": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 9
+    },
+    "palaces": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/palace"
+      },
+      "minItems": 9,
+      "maxItems": 9,
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 1
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 2
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 3
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 4
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 5
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 6
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 7
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 8
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 9
+              }
+            }
+          }
+        }
+      ]
+    },
+    "palaceStates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/palaceState"
+      },
+      "minItems": 9,
+      "maxItems": 9,
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 1
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 2
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 3
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 4
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 5
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 6
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 7
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 8
+              }
+            }
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "const": 9
+              }
+            }
+          }
+        }
+      ]
+    },
+    "voidBranches": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "子",
+          "丑",
+          "寅",
+          "卯",
+          "辰",
+          "巳",
+          "午",
+          "未",
+          "申",
+          "酉",
+          "戌",
+          "亥"
+        ]
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "voidPalaces": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 9
+      },
+      "minItems": 1,
+      "maxItems": 2
+    },
+    "horse": {
+      "enum": [
+        "子",
+        "丑",
+        "寅",
+        "卯",
+        "辰",
+        "巳",
+        "午",
+        "未",
+        "申",
+        "酉",
+        "戌",
+        "亥"
+      ]
+    },
+    "horsePalace": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9
+    },
+    "traces": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 0
+    },
+    "dingJu": {
+      "$ref": "#/$defs/dingJu"
+    },
+    "chaiBu": {
+      "$ref": "#/$defs/dingJu"
+    },
+    "date": {
+      "type": "object",
+      "properties": {
+        "year": {
+          "type": "integer",
+          "minimum": 1900,
+          "maximum": 2100
+        },
+        "month": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "day": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31
+        },
+        "hour": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 23
+        },
+        "minute": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 59
+        },
+        "timestamp": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "year",
+        "month",
+        "day",
+        "hour",
+        "minute",
+        "timestamp"
+      ],
+      "additionalProperties": true
+    },
+    "solar": {
+      "type": "object",
+      "properties": {
+        "current": {
+          "$ref": "#/$defs/event"
+        },
+        "next": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "term": {
+              "enum": [
+                "冬至",
+                "小寒",
+                "大寒",
+                "立春",
+                "雨水",
+                "惊蛰",
+                "春分",
+                "清明",
+                "谷雨",
+                "立夏",
+                "小满",
+                "芒种",
+                "夏至",
+                "小暑",
+                "大暑",
+                "立秋",
+                "处暑",
+                "白露",
+                "秋分",
+                "寒露",
+                "霜降",
+                "立冬",
+                "小雪",
+                "大雪"
+              ]
+            },
+            "termIndex": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 23
+            },
+            "timestamp": {
+              "type": "integer"
+            },
+            "text": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}$"
+            }
+          },
+          "required": [
+            "term",
+            "termIndex",
+            "timestamp",
+            "text"
+          ],
+          "additionalProperties": true
+        },
+        "precision": {
+          "const": "分钟"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nearBoundary": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "current",
+        "next",
+        "precision",
+        "source",
+        "nearBoundary"
+      ],
+      "additionalProperties": true
+    },
+    "rules": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timezone": {
+          "const": "UTC+8"
+        },
+        "dayBoundary": {
+          "const": "23:00"
+        },
+        "activePillar": {
+          "enum": [
+            "hour",
+            "day",
+            "month"
+          ]
+        },
+        "centerHost": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hostPalace": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 9
+        },
+        "bird": {
+          "type": "string",
+          "minLength": 1
+        },
+        "jia": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dark": {
+          "enum": [
+            "mingfa",
+            "unavailable"
+          ]
+        },
+        "voidAndHorse": {
+          "enum": [
+            "hour",
+            "day",
+            "month"
+          ]
+        }
+      },
+      "required": [
+        "method",
+        "timezone",
+        "dayBoundary",
+        "activePillar",
+        "centerHost",
+        "hostPalace",
+        "bird",
+        "jia",
+        "dark",
+        "voidAndHorse"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "engineVersion",
+    "snapshotId",
+    "input",
+    "profile",
+    "mode",
+    "settings",
+    "inactiveSettings",
+    "timeConventions",
+    "generator",
+    "generatedAt",
+    "yang",
+    "ju",
+    "hourIndex",
+    "hour",
+    "activeIndex",
+    "activePillar",
+    "activeGanZhi",
+    "pillars",
+    "layers",
+    "xun",
+    "hidden",
+    "original",
+    "source",
+    "hostPalace",
+    "hostTerm",
+    "darkMode",
+    "targetRaw",
+    "target",
+    "targetStem",
+    "chiefStar",
+    "chiefDoor",
+    "doorRaw",
+    "doorTarget",
+    "earth",
+    "sky",
+    "stars",
+    "doors",
+    "heavenGods",
+    "earthGods",
+    "dark",
+    "darkBranches",
+    "birdPalace",
+    "palaces",
+    "palaceStates",
+    "voidBranches",
+    "voidPalaces",
+    "horse",
+    "horsePalace",
+    "traces",
+    "notes",
+    "dingJu",
+    "date",
+    "solar",
+    "rules"
+  ],
+  "additionalProperties": true,
+  "$defs": {
+    "settings": {
+      "type": "object",
+      "properties": {
+        "timeLevel": {
+          "type": "string",
+          "enum": [
+            "shijia",
+            "rijia",
+            "yuejia"
+          ]
+        },
+        "pan": {
+          "type": "string",
+          "enum": [
+            "zhuanpan",
+            "feipan",
+            "xingfeimenzhuan",
+            "shenzhuanfeipan"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "chaibu",
+            "zhirun",
+            "rijia",
+            "yuejia"
+          ]
+        },
+        "centerHost": {
+          "type": "string",
+          "enum": [
+            "kun2",
+            "eight-season",
+            "yang-kun-yin-gen",
+            "yang-gen-yin-kun",
+            "four-season",
+            "kan1"
+          ]
+        },
+        "yangGods": {
+          "type": "string",
+          "enum": [
+            "baihu-xuanwu",
+            "gouchen-zhuque"
+          ]
+        },
+        "intercalationDays": {
+          "type": "integer",
+          "enum": [
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        "starDirection": {
+          "type": "string",
+          "enum": [
+            "forward",
+            "reverse",
+            "dun"
+          ]
+        },
+        "doorOrder": {
+          "type": "string",
+          "enum": [
+            "forward",
+            "dun"
+          ]
+        },
+        "middleDoor": {
+          "type": "string",
+          "enum": [
+            "use",
+            "advance",
+            "retreat",
+            "host"
+          ]
+        },
+        "taiChang": {
+          "type": "string",
+          "enum": [
+            "use",
+            "omit"
+          ]
+        }
+      },
+      "required": [
+        "timeLevel",
+        "pan",
+        "method",
+        "centerHost",
+        "yangGods",
+        "intercalationDays",
+        "starDirection",
+        "doorOrder",
+        "middleDoor",
+        "taiChang"
+      ],
+      "additionalProperties": false
+    },
+    "palace": {
+      "type": "object",
+      "properties": {
+        "number": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9
+        },
+        "name": {
+          "enum": [
+            "坎",
+            "坤",
+            "震",
+            "巽",
+            "中",
+            "乾",
+            "兑",
+            "艮",
+            "离"
+          ]
+        },
+        "direction": {
+          "enum": [
+            "北",
+            "西南",
+            "东",
+            "东南",
+            "中",
+            "西北",
+            "西",
+            "东北",
+            "南"
+          ]
+        },
+        "earth": {
+          "enum": [
+            "甲",
+            "乙",
+            "丙",
+            "丁",
+            "戊",
+            "己",
+            "庚",
+            "辛",
+            "壬",
+            "癸"
+          ]
+        },
+        "sky": {
+          "enum": [
+            "",
+            "甲",
+            "乙",
+            "丙",
+            "丁",
+            "戊",
+            "己",
+            "庚",
+            "辛",
+            "壬",
+            "癸"
+          ]
+        },
+        "hostedEarth": {
+          "enum": [
+            "",
+            "甲",
+            "乙",
+            "丙",
+            "丁",
+            "戊",
+            "己",
+            "庚",
+            "辛",
+            "壬",
+            "癸"
+          ]
+        },
+        "hostedSky": {
+          "enum": [
+            "",
+            "甲",
+            "乙",
+            "丙",
+            "丁",
+            "戊",
+            "己",
+            "庚",
+            "辛",
+            "壬",
+            "癸"
+          ]
+        },
+        "star": {
+          "enum": [
+            "",
+            "天蓬",
+            "天芮",
+            "天冲",
+            "天辅",
+            "天禽",
+            "天心",
+            "天柱",
+            "天任",
+            "天英"
+          ]
+        },
+        "door": {
+          "enum": [
+            "",
+            "休门",
+            "死门",
+            "伤门",
+            "杜门",
+            "中门",
+            "开门",
+            "惊门",
+            "生门",
+            "景门"
+          ]
+        },
+        "god": {
+          "enum": [
+            "",
+            "值符",
+            "螣蛇",
+            "太阴",
+            "六合",
+            "白虎",
+            "玄武",
+            "九地",
+            "九天",
+            "勾陈",
+            "朱雀",
+            "太常"
+          ]
+        },
+        "earthGod": {
+          "enum": [
+            "",
+            "值符",
+            "螣蛇",
+            "太阴",
+            "六合",
+            "白虎",
+            "玄武",
+            "九地",
+            "九天",
+            "勾陈",
+            "朱雀",
+            "太常"
+          ]
+        },
+        "dark": {
+          "enum": [
+            "",
+            "甲",
+            "乙",
+            "丙",
+            "丁",
+            "戊",
+            "己",
+            "庚",
+            "辛",
+            "壬",
+            "癸"
+          ]
+        },
+        "darkBranch": {
+          "enum": [
+            "",
+            "子",
+            "丑",
+            "寅",
+            "卯",
+            "辰",
+            "巳",
+            "午",
+            "未",
+            "申",
+            "酉",
+            "戌",
+            "亥"
+          ]
+        },
+        "bird": {
+          "type": "boolean"
+        },
+        "empty": {
+          "type": "boolean"
+        },
+        "horse": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "number",
+        "name",
+        "direction",
+        "earth",
+        "sky",
+        "hostedEarth",
+        "hostedSky",
+        "star",
+        "door",
+        "god",
+        "earthGod",
+        "dark",
+        "darkBranch",
+        "bird",
+        "empty",
+        "horse"
+      ],
+      "additionalProperties": true
+    },
+    "palaceState": {
+      "type": "object",
+      "properties": {
+        "number": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9
+        },
+        "fields": {
+          "type": "object",
+          "properties": {
+            "number": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "name": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "direction": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "earth": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "sky": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "hostedEarth": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "hostedSky": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "star": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "door": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "god": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "earthGod": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "dark": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "darkBranch": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "bird": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "empty": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            },
+            "horse": {
+              "enum": [
+                "present",
+                "empty",
+                "notApplicable",
+                "notImplemented",
+                "missing",
+                "error"
+              ]
+            }
+          },
+          "required": [
+            "number",
+            "name",
+            "direction",
+            "earth",
+            "sky",
+            "hostedEarth",
+            "hostedSky",
+            "star",
+            "door",
+            "god",
+            "earthGod",
+            "dark",
+            "darkBranch",
+            "bird",
+            "empty",
+            "horse"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "number",
+        "fields"
+      ],
+      "additionalProperties": false
+    },
+    "dingJu": {
+      "type": "object",
+      "properties": {
+        "yang": {
+          "type": "boolean"
+        },
+        "ju": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9
+        },
+        "yuan": {
+          "enum": [
+            "上元",
+            "中元",
+            "下元"
+          ]
+        },
+        "term": {
+          "enum": [
+            "冬至",
+            "小寒",
+            "大寒",
+            "立春",
+            "雨水",
+            "惊蛰",
+            "春分",
+            "清明",
+            "谷雨",
+            "立夏",
+            "小满",
+            "芒种",
+            "夏至",
+            "小暑",
+            "大暑",
+            "立秋",
+            "处暑",
+            "白露",
+            "秋分",
+            "寒露",
+            "霜降",
+            "立冬",
+            "小雪",
+            "大雪"
+          ]
+        },
+        "head": {
+          "type": "string",
+          "pattern": "^[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]$"
+        },
+        "headIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 59
+        },
+        "label": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "termIndex": {
+          "type": "integer"
+        },
+        "tableRow": {
+          "type": "integer"
+        },
+        "yuanIndex": {
+          "type": "integer"
+        },
+        "upperHead": {
+          "type": "string",
+          "pattern": "^[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]$"
+        },
+        "upperHeadDate": {
+          "type": "string"
+        },
+        "winterLead": {
+          "type": "integer"
+        },
+        "summerLead": {
+          "type": "integer"
+        },
+        "adjustedYear": {
+          "type": "integer"
+        },
+        "yearBranch": {
+          "enum": [
+            "",
+            "子",
+            "丑",
+            "寅",
+            "卯",
+            "辰",
+            "巳",
+            "午",
+            "未",
+            "申",
+            "酉",
+            "戌",
+            "亥"
+          ]
+        },
+        "relation": {
+          "type": "string"
+        },
+        "leap": {
+          "type": "boolean"
+        },
+        "intercalationDays": {
+          "type": "integer",
+          "enum": [
+            7,
+            8,
+            9,
+            10
+          ]
+        }
+      },
+      "required": [
+        "yang",
+        "ju",
+        "yuan",
+        "term"
+      ],
+      "additionalProperties": true
+    },
+    "event": {
+      "type": "object",
+      "properties": {
+        "term": {
+          "enum": [
+            "冬至",
+            "小寒",
+            "大寒",
+            "立春",
+            "雨水",
+            "惊蛰",
+            "春分",
+            "清明",
+            "谷雨",
+            "立夏",
+            "小满",
+            "芒种",
+            "夏至",
+            "小暑",
+            "大暑",
+            "立秋",
+            "处暑",
+            "白露",
+            "秋分",
+            "寒露",
+            "霜降",
+            "立冬",
+            "小雪",
+            "大雪"
+          ]
+        },
+        "termIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 23
+        },
+        "timestamp": {
+          "type": "integer"
+        },
+        "text": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}$"
+        }
+      },
+      "required": [
+        "term",
+        "termIndex",
+        "timestamp",
+        "text"
+      ],
+      "additionalProperties": true
+    }
+  }
+}

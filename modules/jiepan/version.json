@@ -1,0 +1,12 @@
+{
+  "name": "qimen-jiepan",
+  "version": "0.2.3",
+  "renderWrapperVersion": "1.1.0",
+  "knowledgeMode": "pure-theory",
+  "engineInterface": {
+    "skill": "qimen-paipan",
+    "engineVersion": "0.4.1",
+    "schemaVersion": "1.0.0"
+  },
+  "unifiedBundleAdaptation": "renderer located via sibling paipan module; self-contained inline fallback when file URL blocked"
+}

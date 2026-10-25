@@ -1,0 +1,16 @@
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local Node dependencies
+node_modules/
+
+# Generated charts and task scratch files
+/outputs/
+/work/
+
+# Operating system metadata
+.DS_Store
+Thumbs.db

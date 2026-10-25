@@ -1,0 +1,56 @@
+{
+  "name": "qimen",
+  "version": "1.0.0",
+  "format": "agentskills.io SKILL.md",
+  "engine": {
+    "name": "qimen-paipan",
+    "engineVersion": "0.4.1",
+    "outputToolsVersion": "0.5.0",
+    "schemaVersion": "1.0.0"
+  },
+  "interpreter": {
+    "name": "qimen-jiepan",
+    "version": "0.2.3",
+    "knowledgeMode": "pure-theory",
+    "renderWrapperVersion": "1.1.0"
+  },
+  "sourceArchives": {
+    "paipan": {
+      "archive": "qimen-paipan(1).zip",
+      "sha256": "30ab02ab32f34d08068dc6206aa8fde6e11c17f0a33cd2a414f7eb5d294fc6c7",
+      "members": 21
+    },
+    "jiepan": {
+      "archive": "qimen-jiepan-v0.2.3.zip",
+      "sha256": "076f2a81c383f329100538db4a7077584d039480a413a6c469de12660ccbaaba",
+      "members": 27
+    }
+  },
+  "singlePublicEntry": "SKILL.md",
+  "runtimeExternalDependencies": [
+    "node (for generating charts)",
+    "python >=3.10 (for helper tools; aligned with interpreter requirements)",
+    "playwright python and existing Chrome/Edge/Chromium (PNG optional)"
+  ],
+  "excludedFromRuntime": [
+    "original paipan agents/openai.yaml (host-specific and references old skill)",
+    "original paipan tests and tests/fixtures (engineering assets)",
+    "history, case feedback, evaluation archives"
+  ],
+  "modifiedOriginalFunctionalFiles": {
+    "modules/jiepan/scripts/render_snapshot.py": "bundled renderer lookup; verified self-contained HTML fallback when file URL is administratively blocked; no algorithm changes"
+  },
+  "sourceCoreImmutable": [
+    "modules/paipan/scripts/qimen-engine.js",
+    "modules/paipan/scripts/solar-terms.json",
+    "modules/paipan/assets/paipan.schema.json",
+    "all 22 theory references of jiepan"
+  ],
+  "modifiedOriginalMetadataFiles": {
+    "modules/jiepan/version.json": "records adapted bundled wrapperVersion 1.1.0; interpretation release identity remains 0.2.3"
+  },
+  "modifiedOriginalProceduralDocs": {
+    "modules/jiepan/references/adapter.md": "installed paipan reference replaced with sibling bundle module",
+    "modules/paipan/references/testing.md": "note original engineering tests omitted from runtime"
+  }
+}

@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>奇门研习 · 九宫排盘</title>
+<style>
+:root{--paper:#f3f0e8;--sheet:#fffdf8;--ink:#283b36;--muted:#68746c;--line:#d4d9cd;--red:#9e3b2d;--gold:#926a35;--wash:#e9ede3;--serif:"Noto Serif SC","Source Han Serif SC","Songti SC","SimSun",serif;--sans:"Microsoft YaHei","PingFang SC",sans-serif}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.6}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+button:disabled{opacity:.4;cursor:default}
+a{color:var(--red);text-underline-offset:3px}
+.wrap{max-width:1320px;margin:auto;padding:0 42px}
+header{border-bottom:1px solid var(--line)}
+.mast{display:flex;justify-content:space-between;align-items:center;min-height:88px}
+.brand{display:flex;align-items:center;gap:16px}
+.seal{width:43px;height:43px;background:var(--red);color:var(--sheet);display:grid;place-content:center;font:18px var(--serif);letter-spacing:1px;white-space:nowrap;border-radius:2px;box-shadow:inset 0 0 0 3px var(--red),inset 0 0 0 4px #ddaea1}
+.brand b{font:24px var(--serif);letter-spacing:4px}
+.brand small{display:block;font-size:11px;letter-spacing:2px;color:var(--muted)}
+.edition{color:var(--muted);font-size:12px;letter-spacing:1px}
+.intro{display:flex;justify-content:space-between;align-items:end;padding:31px 0 27px}
+.intro h1{font:36px var(--serif);font-weight:600;letter-spacing:3px;margin:0 0 5px}
+.intro p{margin:0;color:var(--muted)}
+.intro .caption{font:13px var(--serif);text-align:right;color:var(--muted)}
+.layout{display:grid;grid-template-columns:265px minmax(0,1fr);gap:34px;padding-bottom:34px}
+.sidebar{border-top:3px solid var(--ink)}
+.sidebar section{padding:22px 0;border-bottom:1px solid var(--line)}
+.section-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;font-weight:600}
+.section-label span{font:italic 12px Georgia,serif;font-weight:400;color:var(--muted)}
+.tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:20px}
+.tab{flex:1;border:0;padding:10px 3px;background:none;color:var(--muted);position:relative}
+.tab[aria-selected=true]{color:var(--red);font-weight:600}
+.tab[aria-selected=true]:after{content:"";height:2px;background:var(--red);position:absolute;bottom:-1px;left:18px;right:18px}
+label.field{display:block;font-size:12px;color:var(--muted);margin:16px 0 6px}
+input[type=datetime-local],select{width:100%;border:1px solid var(--line);background:var(--sheet);padding:10px 9px;border-radius:2px;color:var(--ink);min-height:43px}
+.hint{font-size:11px;color:var(--muted);margin:8px 0;line-height:1.8}
+.primary{width:100%;padding:12px;border:1px solid var(--ink);background:var(--ink);color:var(--sheet);margin:17px 0 8px;letter-spacing:5px;border-radius:2px}
+.primary:hover{background:#3f5650}
+.time-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.quiet{border:1px solid var(--line);background:transparent;color:var(--ink);padding:8px 3px;border-radius:2px;font-size:12px}
+.quiet:hover{background:var(--wash)}
+.settings{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 0;font-size:12px}
+.settings dt{color:var(--muted)}
+.settings dd{margin:0;text-align:right}
+.method-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.setting-fields label.field{margin:8px 0 3px}
+.setting-fields select{min-height:34px;padding:5px 8px;font-size:12px}
+.setting-fields select:disabled{opacity:.48;cursor:default}
+.rule-summary{font-size:10px;line-height:1.6;color:var(--muted);margin:0 0 10px}
+.sidebar #rule-settings summary{color:var(--ink);font-weight:600}
+.checks{display:grid;gap:10px;font-size:12px}
+.checks label{display:flex;align-items:center;gap:8px}
+input[type=checkbox]{accent-color:var(--ink);width:15px;height:15px;margin:0}
+.sidebar details{font-size:12px}
+.sidebar summary{cursor:pointer;color:var(--muted);padding:8px 0}
+.sidebar details p{color:var(--muted);margin:8px 0}
+.text-button{border:0;background:none;color:var(--red);padding:10px 0;font-size:12px}
+.error{font-size:12px;color:var(--red);padding:10px 0;margin:0}
+.board-sheet{background:var(--sheet);border:1px solid var(--line);padding:18px;max-width:620px;box-shadow:0 3px 14px #293b3610}
+.board-heading{display:flex;justify-content:space-between;align-items:center;gap:20px}
+.board-heading h2{font:28px var(--serif);letter-spacing:2px;margin:0}
+.board-heading .mode-label{font-size:12px;color:var(--muted)}
+.board-date{text-align:right;color:var(--muted);font-size:12px}
+.board-date strong{color:var(--ink);font-weight:500;display:block;font-size:14px}
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);margin:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0}
+.pillar{text-align:center;border-right:1px solid var(--line)}
+.pillar:last-child{border:0}
+.pillar small{font-size:10px;color:var(--muted);letter-spacing:3px;display:block}
+.pillar b{font:24px var(--serif);letter-spacing:7px;font-weight:600}
+.chiefs{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin:0 0 12px;font-size:12px}
+.chiefs b{font-weight:600;color:var(--red);margin-left:6px}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--ink);gap:1px;background:var(--line)}
+.palace{aspect-ratio:1;padding:23px 10px 22px;background:var(--sheet);border:0;text-align:left;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.palace:hover{background:#f3f5ee}
+.palace.selected{background:#edf0e6;box-shadow:inset 0 0 0 2px var(--ink)}
+.palace-top{position:absolute;inset:6px 7px auto;display:flex;justify-content:space-between;gap:4px;align-items:center}
+.palace-name{font-size:9px;color:var(--muted)}
+.palace-name b{font:11px var(--serif);font-weight:500;color:var(--muted);margin-right:4px}
+.marks{display:flex;gap:3px}
+.mark{font-size:10px;border:1px solid var(--line);padding:0 4px;color:var(--muted);line-height:17px}
+.mark.horse{color:var(--red);border-color:#d6b7a9}
+.palace-body{width:124px;max-width:100%;display:flex;flex-direction:column;gap:5px}
+.god,.earth-god{font:16px/1.25 var(--serif);text-align:center;color:var(--ink)}
+.earth-god{color:var(--muted)}
+.palace-pair{display:grid;grid-template-columns:minmax(0,1fr) 48px;align-items:center;column-gap:12px}
+.star{font:21px/1.2 var(--serif);font-weight:600;white-space:nowrap}
+.bird{font:11px var(--serif);color:var(--muted);padding-left:3px}
+.door{font:20px/1.2 var(--serif);font-weight:500;white-space:nowrap}
+.stem{font:28px/1.2 var(--serif);white-space:nowrap;font-weight:600}
+.stem.sky{color:var(--red)}
+.hosted{font:12px var(--serif);font-weight:400;color:var(--gold);margin-left:3px}
+.cell-foot{position:absolute;right:7px;bottom:6px;display:flex;gap:8px;color:var(--muted);font-size:10px;line-height:1.3}
+.center{align-items:center;justify-content:center;text-align:center;background:#f0f2e9}
+.center .center-kicker{position:absolute;top:7px;left:7px;font-size:10px;color:var(--muted)}
+.center .stem{font-size:38px}
+.center .center-sub{position:absolute;bottom:6px;left:7px;font-size:10px;color:var(--muted)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:10px;color:var(--muted);margin-top:12px}
+.legend .red{color:var(--red)}
+.notice{background:var(--wash);padding:10px 12px;margin:15px 0 0;color:var(--ink);font-size:12px;border-left:2px solid var(--gold)}
+.selection{padding:18px 0 22px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:130px minmax(0,1fr);gap:16px}
+.selection h3{font:21px var(--serif);margin:0}
+.selection small{color:var(--muted);font-size:11px}
+.selection p{margin:0;font-size:13px;color:var(--muted)}
+.selection p strong{color:var(--ink);font-weight:500}
+.steps-heading{display:flex;justify-content:space-between;align-items:center;margin:21px 0 14px}
+.steps-heading h3{font:23px var(--serif);margin:0;letter-spacing:2px}
+.step-list{margin:0;padding:0;list-style:none;counter-reset:step}
+.step-list li{counter-increment:step;display:grid;grid-template-columns:30px 1fr;gap:10px;border-top:1px solid var(--line);padding:13px 0;font-size:13px}
+.step-list li:before{content:counter(step,decimal-leading-zero);font:italic 14px Georgia,serif;color:var(--gold);padding-top:4px}
+.actions{display:flex;gap:8px}
+.actions .quiet{padding:7px 13px}
+.footer{padding:22px 0 28px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+.footer details{max-width:920px}
+.footer summary{cursor:pointer;font-size:12px;color:var(--ink)}
+.footer p{margin:10px 0}
+.footer ul{padding-left:20px;margin:8px 0}
+.status{font-size:12px;color:var(--muted);min-height:20px}
+.manual-title{display:none}
+.mode-manual .manual-title{display:block}
+.mode-manual .calendar-title{display:none}
+[hidden]{display:none!important}
+
+@media(min-width:1450px){.wrap{max-width:1390px}
+}
+
+@media(max-width:1050px){.wrap{padding:0 24px}
+.layout{grid-template-columns:230px minmax(0,1fr);gap:22px}
+.board-sheet{padding:20px 17px}
+.palace{aspect-ratio:auto}
+.star{font-size:20px}
+.door{font-size:19px}
+.selection{grid-template-columns:100px 1fr}
+}
+
+@media(max-width:780px){.wrap{padding:0 18px}
+.mast{min-height:75px}
+.brand b{font-size:21px}
+.edition{font-size:10px}
+.intro{padding:22px 0}
+.intro h1{font-size:29px}
+.intro .caption{display:none}
+.intro p{font-size:12px}
+.layout{display:block}
+.sidebar{display:grid;grid-template-columns:1fr 1fr;gap:0 22px;margin-bottom:24px}
+.sidebar section{padding:17px 0}
+.sidebar .display-section{grid-column:1/-1;padding:10px 0}
+.display-section .section-label{display:none}
+.checks{display:flex;flex-wrap:wrap;gap:15px}
+.sidebar .tabs{margin-bottom:8px}
+.sidebar .hint{font-size:10px}
+.board-sheet{padding:18px}
+.board-heading h2{font-size:26px}
+.selection{grid-template-columns:100px 1fr}
+.settings{gap:7px 0}
+}
+
+@media(max-width:470px){.wrap{padding:0 12px}
+.brand{gap:10px}
+.brand b{letter-spacing:2px}
+.seal{width:37px;height:37px;font-size:18px}
+.edition{max-width:80px;text-align:right}
+.intro h1{font-size:27px;letter-spacing:2px}
+.sidebar{display:block;margin-bottom:20px}
+.sidebar .settings-section{display:block;border-top:1px solid var(--line)}
+.sidebar section{border-bottom:0}
+.sidebar .display-section{padding-top:0}
+.board-sheet{padding:14px 9px}
+.board-heading{gap:8px}
+.board-heading h2{font-size:23px;letter-spacing:0}
+.board-date strong{font-size:12px}
+.board-heading .mode-label,.board-date{font-size:10px}
+.pillars{margin:14px 0;padding:10px 0}
+.pillar b{font-size:22px;letter-spacing:4px}
+.chiefs{font-size:10px;gap:5px;margin-bottom:12px}
+.chiefs b{margin-left:3px}
+.palace{padding:19px 6px 18px}
+.palace-body{width:100%;gap:3px}
+.palace-name{font-size:9px}
+.palace-name b{font-size:10px;margin-right:2px}
+.marks{gap:2px}
+.mark{font-size:9px;padding:0 2px}
+.god,.earth-god{font-size:14px}
+.palace-pair{grid-template-columns:minmax(0,1fr) 34px;column-gap:6px}
+.star{font-size:16px}
+.bird{font-size:9px;padding-left:1px}
+.door{font-size:16px}
+.stem{font-size:24px}
+.hosted{font-size:10px;margin-left:1px}
+.cell-foot{font-size:9px;right:5px;bottom:5px}
+.center .center-sub{font-size:9px;left:5px;bottom:5px}
+.legend{gap:10px;font-size:9px}
+.selection{grid-template-columns:70px 1fr;gap:10px}
+.selection h3{font-size:18px}
+.selection p{font-size:12px}
+.steps-heading h3{font-size:21px}
+.actions .quiet{padding:6px 8px;font-size:11px}
+}
+
+@media print{body{background:white}
+.wrap{max-width:none;padding:0 15px}
+.sidebar,.intro,.footer,.actions,.text-button,.status{display:none}
+.layout{display:block}
+.board-sheet{box-shadow:none;padding:16px}
+.palace{break-inside:avoid}
+.mast{min-height:60px}
+.board{break-inside:avoid}
+.steps-heading{margin-top:16px}
+.step-list li{padding:7px 0;font-size:11px}
+}
+
+</style>
+</head>
+<body>
+<header><div class="wrap mast"><div class="brand"><span class="seal" aria-hidden="true">奇門</span><div><b>奇门研习</b><small>九宫有序 · 逐步可查</small></div></div><div class="edition">时家 · 日家 · 月家<br>研习版 0.4.1</div></div></header>
+<div class="wrap">
+<div class="intro"><div><h1>从时刻，见九宫。</h1><p>排一局，查看落宫，再沿步骤复核。</p></div><div class="caption">天盘随星转<br>值使顺逆遁宫去</div></div>
+<main class="layout">
+<aside class="sidebar" aria-label="排盘输入与设置">
+<section><div class="section-label">起局 <span>01 / TIME</span></div>
+<div class="tabs" role="tablist" aria-label="起局方式"><button class="tab" id="calendar-tab" type="button" role="tab" aria-selected="true" aria-controls="calendar-panel">按时间起局</button><button class="tab" id="manual-tab" type="button" role="tab" aria-selected="false" aria-controls="manual-panel">按局复核</button></div>
+<form id="chart-form">
+<label class="field" for="setting-timeLevel">时间层级</label><select id="setting-timeLevel"></select>
+<div class="method-fields"><div><label class="field" for="setting-pan">盘式</label><select id="setting-pan"></select></div><div><label class="field" for="setting-method">定局方法</label><select id="setting-method"></select></div></div>
+<div id="calendar-panel" role="tabpanel" aria-labelledby="calendar-tab">
+<label class="field" for="chart-time">公历日期与时间 · 北京时间</label><input id="chart-time" type="datetime-local" min="1900-01-01T00:00" max="2100-12-31T23:59" step="60" required>
+<p class="hint">本版日期范围 1900—2100。以 UTC+8 输入，23:00 换日；节气精确到分钟。</p>
+</div>
+<div id="manual-panel" role="tabpanel" aria-labelledby="manual-tab" hidden>
+<label class="field" for="dun">阴阳遁</label><select id="dun"><option value="yang">阳遁</option><option value="yin">阴遁</option></select>
+<label class="field" for="ju">局数</label><select id="ju"></select>
+<label class="field" for="hour-cycle" id="cycle-label">起盘干支 · 时柱</label><select id="hour-cycle"></select>
+<div id="manual-term-field" hidden><label class="field" for="manual-term">节气 · 用于季节寄宫</label><select id="manual-term"></select></div>
+<p class="hint">直接采用所选局数，不计算日期四柱或拆补／置闰定局。</p>
+</div>
+<button class="primary" type="submit">排 盘</button><p id="error" class="error" role="alert" hidden></p>
+</form>
+<div class="time-actions" id="calendar-actions"><button class="quiet" id="previous" type="button">← 前一时辰</button><button class="quiet" id="now" type="button">此刻</button><button class="quiet" id="next" type="button">后一时辰 →</button></div>
+<button class="text-button" id="example" type="button">试排：阳遁一局 · 乙丑时 ↗</button>
+</section>
+<section class="settings-section"><details id="rule-settings" open><summary>排盘设置 · 七项</summary><div class="setting-fields" id="setting-fields"></div><p class="hint" id="setting-hint"></p><p class="hint">六甲用旬首六仪、三奇丁丙乙；空亡驿马按起盘柱。时家转盘／飞盘显示鸣法暗干支。</p></details></section>
+<section class="display-section"><div class="section-label">盘面显示 <span>03 / VIEW</span></div><div class="checks"><label><input id="show-earth-gods" type="checkbox" checked>地八神</label><label><input id="show-dark" type="checkbox" checked>鸣法暗干支</label><label><input id="show-marks" type="checkbox" checked>空亡与驿马</label></div></section>
+</aside>
+<div>
+<article class="board-sheet" aria-label="九宫排盘结果">
+<div class="board-heading"><div><h2 id="ju-title">—</h2><div class="mode-label" id="yuan-title">时家 · 转盘 · 拆补</div></div><div class="board-date"><strong id="result-date">—</strong><span id="term-time">北京时间 UTC+8</span></div></div>
+<div class="pillars" id="pillars" aria-label="四柱"></div>
+<div class="chiefs" id="chiefs"></div>
+<p class="rule-summary" id="rule-summary"></p>
+<div class="board" id="board" aria-label="上南下北的九宫盘"></div>
+<div class="legend"><span class="red">星旁：天盘干</span><span>门旁：地盘干</span><span>上：天神 · 下：地神</span><span>小字：寄干／暗干支 · 上南下北</span></div>
+<p id="boundary-note" class="notice" hidden></p>
+</article>
+<div class="selection" id="selection" aria-live="polite"></div>
+<div class="steps-heading"><h3>这一局，如何排成</h3><div class="actions"><button class="quiet" id="export" type="button">保存盘文</button><button class="quiet" id="print" type="button">打印</button></div></div>
+<ol class="step-list" id="steps"></ol><p id="status" class="status" role="status"></p>
+<p id="snapshot-status" class="hint" hidden></p>
+</div>
+</main>
+<footer class="footer"><details><summary>关于这版：规则依据、验证范围与原创说明</summary>
+<p>计算引擎和界面均为重新编写的 JavaScript／HTML／CSS。所有计算在浏览器本地完成，断网可用；页面没有 APK 的库、反编译代码或远程排盘接口。</p>
+<p>支持时家、日家、月家的转盘、飞盘、星飞门转、神转飞盘。时家选拆补或置闰；日／月家采用各自定局。默认转盘主盘及鸣法暗干支通过 1,080 组原生函数对照，拆补定局通过 1,440 组对照；混合盘与日／月家主盘另作计算层核对。历法采用共同分钟节气输入，不代表原软件完整历算已核实。空亡、驿马按起盘柱的通行规则；混合盘及日／月家的专用附干层本版尚未展示。</p>
+<p>节气表以 JPL DE440s 离线计算，保存为最近分钟，内置 1898—2101 数据以支持 1900—2100 起局及置闰回溯。与<a href="https://www.hko.gov.hk/tc/gts/astronomy/Solar_Term.htm" target="_blank" rel="noreferrer">香港天文台</a>2019—2028 年 240 个时刻核对，239 个分钟一致，1 个相差一分钟。分钟起点视为交节，交节前后 3 分钟提示边界；此范围内原软件可能不同。分钟粒度不等于承诺全范围误差小于一分钟。尚未做 Android 整盘逐屏核对；此版不含旺衰、十二长生、神煞或格局解读。</p>
+<p>传统规则可参看<a href="https://zh.wikisource.org/wiki/煙波釣叟歌" target="_blank" rel="noreferrer">《烟波钓叟歌》</a>与<a href="https://zh.wikisource.org/zh/遁甲演義_(四庫全書本)/卷1" target="_blank" rel="noreferrer">《遁甲演义》卷一</a>。本版以软件的已核实分支为对照目标，遇到书上的不同约定，按“排盘步骤”定位差异。</p>
+</details><p>奇门研习 · 时家／日家／月家九宫排盘 · 独立计算引擎 0.4.1</p></footer>
+</div>
+<script>
+/*__SOLAR__*/
+/*__ENGINE__*/
+</script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const NUMERALS = [...'一二三四五六七八九'];
+const SCREEN_ORDER = [4,9,2,3,5,7,8,1,6];
+let mode='calendar', result=null, selected=1;
+function option(value,text){ const el=document.createElement('option');el.value=value;el.textContent=text;return el; }
+for(let i=1;i<=9;i++) $('ju').append(option(i,`${NUMERALS[i-1]}局`));
+for(let i=0;i<60;i++) $('hour-cycle').append(option(i,Qimen.gz(i)));
+for(const term of Qimen.TERMS) $('manual-term').append(option(term,term));
+const SETTING_NAMES={centerHost:'寄宫方式',yangGods:'转盘阳遁八神',intercalationDays:'置闰天数',starDirection:'九星顺逆',doorOrder:'飞盘门序',middleDoor:'飞盘中门',taiChang:'飞盘太常'};
+for(const [key,name] of Object.entries(SETTING_NAMES)) {
+  const label=document.createElement('label');label.className='field';label.htmlFor='setting-'+key;label.textContent=name;
+  const select=document.createElement('select');select.id='setting-'+key;
+  $('setting-fields').append(label,select);
+}
+/*__INITIAL_SETTINGS__*/
+/*__INITIAL_SNAPSHOT__*/
+function freezeSnapshot(value){if(value&&typeof value==='object'){Object.values(value).forEach(freezeSnapshot);Object.freeze(value);}return value;}
+const originalSnapshot=globalThis.QimenInitialSnapshot?freezeSnapshot(structuredClone(globalThis.QimenInitialSnapshot)):null;
+globalThis.QimenOriginalSnapshot=originalSnapshot;
+const initialSettings=Qimen.normalizeSettings(globalThis.QimenInitialSettings || {});
+for(const [key,choices] of Object.entries(Qimen.SETTING_CHOICES)) {
+  for(const [value,label] of choices) $('setting-'+key).append(option(value,label));
+  $('setting-'+key).value=String(initialSettings[key]);
+}
+function refreshMethods(){
+  const family=$('setting-timeLevel').value,previous=$('setting-method').value;
+  const choices=family==='shijia'?['chaibu','zhirun']:[family];
+  $('setting-method').replaceChildren(...choices.map(value=>option(value,Qimen.settingLabel('method',value))));
+  $('setting-method').value=choices.includes(previous)?previous:choices[0];
+}
+function readSettings(){
+  const settings={};for(const key of Object.keys(Qimen.DEFAULT_SETTINGS)) settings[key]=key==='intercalationDays'?Number($('setting-'+key).value):$('setting-'+key).value;
+  return settings;
+}
+function updateApplicability(){
+  const layers=Qimen.layerModes($('setting-pan').value),family=$('setting-timeLevel').value;
+  $('setting-starDirection').disabled=!layers.stars;
+  for(const key of ['doorOrder','middleDoor']) $('setting-'+key).disabled=!layers.doors;
+  $('setting-taiChang').disabled=!layers.gods;
+  $('setting-yangGods').disabled=layers.gods;
+  const usesHost=!layers.stars||!layers.doors||!layers.gods||$('setting-middleDoor').value==='host';
+  $('setting-centerHost').disabled=!usesHost;
+  $('setting-intercalationDays').disabled=family!=='shijia'||$('setting-method').value!=='zhirun'||mode==='manual';
+  $('setting-method').disabled=mode==='manual'||family!=='shijia';
+  $('show-dark').disabled=family!=='shijia'||!['zhuanpan','feipan'].includes($('setting-pan').value);
+  $('show-dark').closest('label').title=$('show-dark').disabled?'本方法的专用附干层尚未接入；时家转盘／飞盘可显示鸣法暗干支。':'';
+  $('cycle-label').textContent='起盘干支 · '+({shijia:'时柱',rijia:'日柱',yuejia:'月柱'}[family]);
+  $('previous').textContent='← 前一'+({shijia:'时辰',rijia:'日',yuejia:'月'}[family]);
+  $('next').textContent='后一'+({shijia:'时辰',rijia:'日',yuejia:'月'}[family])+' →';
+  $('manual-term-field').hidden=mode!=='manual'||!usesHost||!['eight-season','four-season'].includes($('setting-centerHost').value);
+  $('setting-hint').textContent=`九星${layers.stars?'飞布':'转布'}，门${layers.doors?'飞布':'转布'}，神${layers.gods?'飞布':'转布'}。置灰的设置不参与本盘。`;
+}
+function settingsText(){
+  const s=result.settings,keys=Object.keys(SETTING_NAMES).filter(key=>!result.inactiveSettings.includes(key));
+  return keys.map(key=>SETTING_NAMES[key]+'：'+Qimen.settingLabel(key,s[key])).join(' · ');
+}
+function changeMode(next){
+  mode=next;
+  const calendar=mode==='calendar';
+  $('calendar-panel').hidden=!calendar;$('manual-panel').hidden=calendar;$('calendar-actions').hidden=!calendar;
+  $('chart-time').required=calendar;$('chart-time').disabled=!calendar;
+  for(const kind of ['calendar','manual']){ const tab=$(kind+'-tab');tab.setAttribute('aria-selected',String(kind===mode));tab.tabIndex=kind===mode?0:-1; }
+  $('error').hidden=true;
+  updateApplicability();
+}
+function pill(label,value){return `<div class="pillar"><small>${label}</small><b>${value}</b></div>`;}
+function render(){
+  if(!result)return;
+  if(originalSnapshot){
+    const original=result.snapshotId===originalSnapshot.snapshotId;
+    $('snapshot-status').hidden=false;
+    $('snapshot-status').textContent=(original?'原始快照：':'当前为交互试算盘；原始快照：')+originalSnapshot.snapshotId+'。页面修改不回写已保存 JSON／Markdown；保存盘文导出当前显示的盘。';
+  }
+  document.getElementById('board').dataset.snapshotId=result.snapshotId||'interactive';
+  $('setting-yangGods').disabled=result.layers.gods||!result.yang;
+  $('ju-title').textContent=`${result.yang?'阳':'阴'}遁${NUMERALS[result.ju-1]}局`;
+  const timed=result.mode==='calendar';
+  const panLabel=Qimen.settingLabel('pan',result.settings.pan),methodLabel=Qimen.settingLabel('method',result.settings.method);
+  const dj=result.dingJu;
+  const familyLabel=Qimen.settingLabel('timeLevel',result.settings.timeLevel);
+  $('yuan-title').textContent=timed?`${familyLabel} · ${panLabel} · ${methodLabel} / ${dj.label||dj.term} · ${dj.yuan}${dj.head?' · 符头'+dj.head:''}`:`按局复核 · ${familyLabel}${panLabel}`;
+  $('rule-summary').textContent=settingsText();
+  $('result-date').textContent=timed?result.input.replace('T',' '):`${result.activeGanZhi} · 手动定局`;
+  $('term-time').textContent=timed?`北京时间 / 交节：${result.solar.current.text}`:'此盘未推算公历日期';
+  const p=result.pillars || {year:'—',month:'—',day:'—',hour:'—',[result.activePillar]:result.activeGanZhi};
+  $('pillars').innerHTML=pill('年柱',p.year)+pill('月柱',p.month)+pill('日柱',p.day)+pill('时柱',p.hour);
+  $('chiefs').innerHTML=`<span>旬首<b>${result.xun}${result.hidden}</b></span><span>值符<b>${result.chiefStar} · ${result.target}宫</b></span><span>值使<b>${result.chiefDoor} · ${result.doorTarget}宫</b></span>`;
+  const showEarth=$('show-earth-gods').checked,showDark=$('show-dark').checked&&result.darkMode==='mingfa',showMarks=$('show-marks').checked;
+  $('board').replaceChildren();
+  for(const number of SCREEN_ORDER){
+    const cell=result.palaces[number-1],button=document.createElement('button');
+    const center=number===5&&result.settings.pan==='zhuanpan';
+    button.type='button';button.className='palace'+(center?' center':'')+(number===selected?' selected':'');
+    button.setAttribute('aria-pressed',String(number===selected));
+    button.setAttribute('aria-label',`${cell.name}${number}宫，${cell.direction}，${cell.star||'无星'}，${cell.door||'无门'}，天盘${cell.sky||'无'}，地盘${cell.earth}`);
+    button.dataset.palace=number;
+    const marks=showMarks?`${cell.empty?'<span class="mark">空</span>':''}${cell.horse?'<span class="mark horse">马</span>':''}`:'';
+    const foot=showDark?`<span>暗 ${cell.dark}${cell.darkBranch}</span>`:'';
+    if(center){
+      button.innerHTML=`<span class="center-kicker">中五</span><span class="stem">${cell.earth}</span><span class="center-sub">寄${result.hostPalace}宫</span><span class="cell-foot">${foot}</span>`;
+    }else{
+      button.innerHTML=`<span class="palace-top"><span class="palace-name"><b>${cell.name}${number}</b>${cell.direction}</span><span class="marks">${marks}</span></span><span class="palace-body"><span class="god">${cell.god}</span><span class="palace-pair"><span class="star">${cell.star}${cell.bird?'<span class="bird">禽</span>':''}</span><span class="stem sky">${cell.sky}${cell.hostedSky?`<span class="hosted">${cell.hostedSky}</span>`:''}</span></span><span class="palace-pair"><span class="door">${cell.door}</span><span class="stem earth">${cell.earth}${cell.hostedEarth?`<span class="hosted">${cell.hostedEarth}</span>`:''}</span></span>${showEarth?`<span class="earth-god">${cell.earthGod}</span>`:''}</span><span class="cell-foot">${foot}</span>`;
+    }
+    button.addEventListener('click',()=>{selected=number;render();document.querySelector(`[data-palace="${number}"]`).focus({preventScroll:true});});
+    $('board').append(button);
+  }
+  renderSelection();
+  $('steps').replaceChildren();result.traces.forEach(text=>{const li=document.createElement('li');li.textContent=text;$('steps').append(li);});
+  $('boundary-note').hidden=!(timed&&result.solar.nearBoundary);
+  $('boundary-note').textContent='当前时刻在交节前后 3 分钟内。节气表按最近分钟保存，可能造成边界处节气、定局或四柱差异，请核对所采用的交节时刻。';
+}
+function renderSelection(){
+  const c=result.palaces[selected-1];
+  let details=selected===5&&result.settings.pan==='zhuanpan'?`中宫地盘<strong>${c.earth}</strong>寄${result.hostPalace}宫；天禽寄后落<strong>${result.birdPalace}宫</strong>，天盘寄干${c.earth}随行。`:`天盘<strong>${c.sky||'无'}${c.hostedSky?'（寄'+c.hostedSky+'）':''}</strong>，地盘<strong>${c.earth}${c.hostedEarth?'（寄'+c.hostedEarth+'）':''}</strong>；<strong>${c.star||'无星'}${c.bird?'带天禽':''}、${c.door||'无门'}、${c.god||'无神'}</strong>。地神${c.earthGod||'无'}，鸣法暗干支${c.dark}${c.darkBranch}。`;
+  if(result.darkMode!=='mingfa') details=details.replace(`，鸣法暗干支${c.dark}${c.darkBranch}`,'');
+  if(selected!==5) details+=`${c.empty?` 本宫含起盘柱旬空${result.voidBranches.join('')}所落支位。`:''}${c.horse?` 起盘柱驿马${result.horse}在本宫。`:''}`;
+  $('selection').innerHTML=`<div><h3>${c.name}${selected}宫</h3><small>${c.direction} · 点宫查看</small></div><p>${details}</p>`;
+}
+function calculate(){
+  try{
+    result=mode==='calendar'?Qimen.atTime($('chart-time').value,readSettings()):Qimen.board($('dun').value==='yang',Number($('ju').value),Number($('hour-cycle').value),readSettings(),$('manual-term').value);
+    if(mode==='manual'){result.mode='manual';if(!result.inactiveSettings.includes('intercalationDays')) result.inactiveSettings.push('intercalationDays');}
+    $('error').hidden=true;$('status').textContent='';render();
+  }catch(error){$('error').textContent=error.message;$('error').hidden=false;}
+}
+function setNow(){
+  const value=Qimen.formatBeijing(Date.now());
+  $('chart-time').value=value;changeMode('calendar');calculate();
+}
+$('chart-form').addEventListener('submit',event=>{event.preventDefault();calculate();});
+for(const key of Object.keys(Qimen.DEFAULT_SETTINGS)) $('setting-'+key).addEventListener('change',()=>{if(key==='timeLevel')refreshMethods();updateApplicability();calculate();});
+$('calendar-tab').addEventListener('click',()=>changeMode('calendar'));
+$('manual-tab').addEventListener('click',()=>changeMode('manual'));
+document.querySelector('[role=tablist]').addEventListener('keydown',event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();changeMode(mode==='calendar'?'manual':'calendar');$(mode+'-tab').focus();}});
+$('now').addEventListener('click',setNow);
+for(const [name,offset] of [['previous',-2],['next',2]]) $(name).addEventListener('click',()=>{
+  try{ const date=Qimen.parseBeijing($('chart-time').value),family=$('setting-timeLevel').value,step=offset/2;
+    let timestamp=date.timestamp+(family==='shijia'?offset*3600000:step*86400000);
+    if(family==='yuejia'){
+      const shifted=new Date(date.timestamp+8*3600000),day=shifted.getUTCDate();shifted.setUTCDate(1);shifted.setUTCMonth(shifted.getUTCMonth()+step);
+      shifted.setUTCDate(Math.min(day,new Date(Date.UTC(shifted.getUTCFullYear(),shifted.getUTCMonth()+1,0)).getUTCDate()));timestamp=shifted.getTime()-8*3600000;
+    }
+    $('chart-time').value=Qimen.formatBeijing(timestamp);calculate(); }
+  catch(error){$('error').textContent=error.message;$('error').hidden=false;}
+});
+$('example').addEventListener('click',()=>{changeMode('manual');$('dun').value='yang';$('ju').value='1';$('hour-cycle').value='1';calculate();});
+for(const id of ['show-earth-gods','show-dark','show-marks']) $(id).addEventListener('change',render);
+$('print').addEventListener('click',()=>window.print());
+$('export').addEventListener('click',()=>{
+  if(!result)return;
+  const lines=[`${Qimen.settingLabel('timeLevel',result.settings.timeLevel)}${Qimen.settingLabel('pan',result.settings.pan)}${result.mode==='calendar'?Qimen.settingLabel('method',result.settings.method):'按局复核'} · ${result.yang?'阳':'阴'}遁${result.ju}局`,settingsText(),result.mode==='calendar'?`北京时间 ${result.input.replace('T',' ')}`:`按局复核 ${result.activeGanZhi}`,
+    result.pillars?Object.entries(result.pillars).map(([name,value])=>({year:'年',month:'月',day:'日',hour:'时'}[name]+':'+value)).join('  '):'未计算日期四柱',
+    ...result.palaces.map(c=>`${c.name}${c.number}宫：星${c.star}${c.bird?'带禽':''} 门${c.door} 神${c.god} 天${c.sky}${c.hostedSky?'寄'+c.hostedSky:''} 地${c.earth}${c.hostedEarth?'寄'+c.hostedEarth:''} 地神${c.earthGod}${result.darkMode==='mingfa'?' 暗'+c.dark+c.darkBranch:''}${c.empty?' 空':''}${c.horse?' 马':''}`),
+    '',...result.traces,'','说明：1900—2100，JPL DE440s 离线节气表按最近分钟保存；尚未核对 Android 整盘显示。独立引擎 '+Qimen.version+'。'];
+  const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),link=document.createElement('a');
+  link.href=url;link.download=`奇门盘_${result.mode==='calendar'?result.input.replace(/[:T]/g,'-'):result.hour}.txt`;link.click();URL.revokeObjectURL(url);$('status').textContent='盘文已保存，含九宫结果与排盘步骤。';
+});
+const INITIAL_INPUT = '__INITIAL_INPUT__';
+$('chart-time').value=INITIAL_INPUT||Qimen.formatBeijing(Date.now());
+if(Number($('chart-time').value.slice(0,4))<1900||Number($('chart-time').value.slice(0,4))>2100)$('chart-time').value='2026-10-06T12:00';
+$('manual-term').value=originalSnapshot?originalSnapshot.solar.current.term:Qimen.atTime($('chart-time').value).solar.current.term;
+if(innerWidth<=780) $('rule-settings').open=false;
+refreshMethods();changeMode('calendar');
+if(originalSnapshot){result=structuredClone(originalSnapshot);render();}else calculate();
+</script>
+</body>
+</html>
