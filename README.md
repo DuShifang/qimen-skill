@@ -2,6 +2,15 @@
 
 将奇门排盘引擎、解盘理论资料和辅助工具整合到一个 Skill 中。通过统一的 [SKILL.md](SKILL.md) 入口，按需求排盘、解读已有盘、排盘后解盘，或查询奇门理论。
 
+## 选择使用方式
+
+| 使用环境 | 入口 |
+|---|---|
+| 能读取文件并运行本地工具的 Agent | 按下方说明安装 Skill，使用 [SKILL.md](SKILL.md) |
+| 手机或 DeepSeek Chat 等普通聊天窗口 | 使用 [mobile/ 手机聊天版](mobile/README.md)，在浏览器排盘，再把盘文和知识文件交给聊天模型 |
+
+手机版提供独立的 [HTML 排盘文件](mobile/index.html) 和 [解盘知识文件](mobile/qimen-chat.md)，无需安装 Node.js 或 Python。当前需下载 HTML 后用浏览器打开，尚未开通在线网页。
+
 ## 功能
 
 - **排盘**：支持时家、日家、月家共 16 种已实现的 profile，默认使用时家转盘拆补。具体组合与设置见 [流派与设置](modules/paipan/references/settings.md)。
@@ -11,7 +20,7 @@
 
 排盘由确定性脚本执行；解盘由使用本 Skill 的助手结合盘面和理论资料完成。解盘模块采用纯理论资料，不附带历史问事或案例反馈库。
 
-## 安装
+## Agent 版安装
 
 本仓库根目录就是完整的 Skill 内容。下载或克隆后，将整个目录以 **`qimen`** 为名放入宿主支持的 skills 目录，不要只复制 `SKILL.md`。
 
@@ -29,6 +38,7 @@ git clone https://github.com/DuShifang/qimen-skill.git qimen
     ├── SKILL.md
     ├── README.md
     ├── bundle-version.json
+    ├── mobile/
     ├── references/
     └── modules/
 ```
@@ -37,7 +47,7 @@ git clone https://github.com/DuShifang/qimen-skill.git qimen
 
 各宿主的安装位置与触发方式见 [跨宿主使用说明](references/host-usage.md)。
 
-## 运行环境
+## Agent 版运行环境
 
 | 用途 | 依赖 |
 |---|---|
@@ -79,6 +89,10 @@ python modules/jiepan/scripts/render_snapshot.py --html "实际HTML路径" --jso
 ├── LICENSE                       # MIT 许可证
 ├── .gitignore
 ├── bundle-version.json           # 总包与模块版本信息
+├── mobile/                       # 手机／普通聊天窗口版
+│   ├── index.html                # 独立排盘页与 Markdown 导出
+│   ├── qimen-chat.md             # 完整聊天解盘知识文件
+│   └── README.md                 # 手机使用说明
 ├── references/
 │   └── host-usage.md              # 跨宿主使用说明
 └── modules/
